@@ -1,2 +1,5 @@
 [*]
 indent_size=4
+
+[*.txt]
+indent_size=1

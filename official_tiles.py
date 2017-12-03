@@ -1,4 +1,5 @@
-from tiles import IslandTile, WaterTile
+from tiles.island_tile import IslandTile
+from tiles.water_tile import WaterTile
 from game import Game
 from player import RandomPlayer
 

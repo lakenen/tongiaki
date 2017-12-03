@@ -19,10 +19,22 @@ class Player(object):
         self.available_boats = [Boat(self) for _ in range(num_boats)]
         self.placed_boats = set()
 
+    @property
+    def current_score(self):
+        score = 0
+        islands = set()
+        for boat in self.placed_boats:
+            assert not boat.current_beach is None
+            islands.add(boat.current_beach.tile)
+        for island in islands:
+            score = score + island.value
+        return score
+
     def get_island_expansion_choices(self):
         return list(set(map(lambda boat: boat.current_beach.tile, self.placed_boats)))
 
     def get_boat(self):
+        assert len(self.available_boats) > 0
         return self.available_boats.pop(0)
 
     def place_boat(self, beach, boat):
@@ -48,6 +60,10 @@ class Player(object):
         """
         raise NotImplemented()
 
+    def __str__(self):
+        return 'Player ' + self.name \
+             + ' (' + str(len(self.available_boats)) + ' boats)' \
+             + ' (score: ' + str(self.current_score) + ')'
 
 class RandomPlayer(Player):
     def place_initial_boat(self, starting_tile):
@@ -62,7 +78,9 @@ class RandomPlayer(Player):
         """
         Randomly choose a valid island to expand on.
         """
-        return random.choice(self.get_island_expansion_choices())
+        choices = self.get_island_expansion_choices()
+        if choices:
+            return random.choice(choices)
 
     def place_boats(self, island_tile, boats):
         """
@@ -73,7 +91,7 @@ class RandomPlayer(Player):
             open_beaches = island_tile.open_beaches
             if open_beaches:
                 random_beach = random.choice(open_beaches)
-                self.place_boat(random_beach, boat)
+                boat.player.place_boat(random_beach, boat)
             else:
                 boat.return_to_player()
 
@@ -86,6 +104,7 @@ class RandomPlayer(Player):
     def choose_beach_to_migrate(self):
         beaches = set()
         for boat in self.placed_boats:
+            assert not boat.current_beach is None
             if boat.current_beach.is_full:
                 beaches.add(boat.current_beach)
         if len(beaches):
