@@ -48,6 +48,8 @@ class Game(object):
                 return
             direction = player.choose_dock(beach)
             current_tile = beach.tile
+            print('!!! migrating tile in direction:', direction)
+            print(current_tile)
             current_boats = beach.remove_all()
             # until current migration is complete...
             while True:
@@ -57,13 +59,8 @@ class Game(object):
                     direction = direction - next_tile.orientation
                 else:
                     next_tile = self.get_tile()
-                    if direction < 3:
-                        next_tile.orientation = direction - 3
-                    elif direction == 3:
-                        next_tile.orientation = 0
-                    else:
-                        next_tile.orientation = 6 - (direction - 3)
 
+                    print('!!! placing tile', direction)
                     self.board.set_neighbor(current_tile, direction, next_tile)
 
                     # starting direction (side) is always 0 for new tiles
@@ -77,10 +74,9 @@ class Game(object):
                     if not self.is_over and current_tile.can_pass(current_boats, direction):
                         old_direction = direction
                         direction = current_tile.get_end(direction)
-                        print(old_direction, direction)
                         continue
                     else:
-                        print('lost...')
+                        print('!!! lost at sea...')
                         # lost at sea... return boats to player and stop picking tiles
                         for boat in current_boats:
                             boat.return_to_player()
@@ -92,7 +88,7 @@ class Game(object):
                 elif current_tile.is_island:
                     # landfall! place boats and stop picking tiles.
                     player.place_boats(current_tile, current_boats)
-                    print('landfall')
+                    print('!!! landfall')
                     print(current_tile)
                     if self.is_over:
                         raise GameOver()

@@ -59,7 +59,7 @@ def generate_tile_stack():
 game = Game(generate_starting_tile(), generate_tile_stack())
 game.play([
     RandomPlayer('A'), RandomPlayer('B'), RandomPlayer('C'),
-    # RandomPlayer('D'), RandomPlayer('E'), RandomPlayer('F'),
+    RandomPlayer('D'), RandomPlayer('E'), RandomPlayer('F'),
 ])
 
 # for tile in OFFICIAL_TILES:

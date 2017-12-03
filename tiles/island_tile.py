@@ -9,15 +9,16 @@ class Beach(object):
         self.docks = set(args)
 
     def __str__(self):
-        result = ''
+        result = '|'
         for boat in self.boats:
-            result += '[{name}]'.format(name=boat.player.name)
+            result += '{name}|'.format(name=boat.player.name)
         for i in range(self.num_open_moorings):
-            result += '[ ]'
+            result += '_|'
 
-        for dock in self.docks:
-            tile_name = '(?)'
-            result += '\n{dock} -> {tile_name}'.format(dock=dock, tile_name=tile_name)
+        # for dock in self.docks:
+        #     tile_name = '(?)'
+        #     result += '\n{dock} -> {tile_name}'.format(dock=dock, tile_name=tile_name)
+        result += ' ' + ','.join(map(str, self.docks))
 
         return result
 
@@ -68,7 +69,12 @@ class IslandTile(Tile):
         assert len(sides) <= Tile.NUM_SIDES
 
     def __str__(self):
-        return '{name} ({value}):\n'.format(name=self.name, value=self.value) + '\n'.join(map(str, self.beaches))
+        return '{name} ({value}) ({q},{r}/{o}):\n'.format(
+            q=self.q,
+            r=self.r,
+            o=self.orientation,
+            name=self.name,
+            value=self.value) + '\n'.join(map(str, self.beaches))
 
     def count_player_boats(self, player):
         result = 0

@@ -30,6 +30,10 @@ class HexGrid(object):
         self.max_r = max_r
         self.size_q = max_q - min_q + 1
         self.size_r = max_r - min_r + 1
+        self.lowest_q = max_q
+        self.lowest_r = max_r
+        self.highest_q = min_q
+        self.highest_r = min_r
         self._grid = [[None] * (self.size_r) for _ in range(self.size_q)]
 
     def set(self, q, r, obj):
@@ -40,6 +44,10 @@ class HexGrid(object):
         if q < 0 or q >= self.size_q or r < 0 or r >= self.size_r:
             raise Exception("Cannot set a point outside the grid.")
         else:
+            self.lowest_q = min(self.lowest_q, q)
+            self.lowest_r = min(self.lowest_r, r)
+            self.highest_q = max(self.highest_q, q)
+            self.highest_r = max(self.highest_r, r)
             self._grid[q][r] = obj
 
     def get(self, q, r):
@@ -56,23 +64,41 @@ class HexGrid(object):
 
     def set_neighbor(self, q, r, direction, obj):
         dq, dr = HexGrid.get_neighbor_offset(direction)
-        print('set', q + dq, r + dr, direction)
         return self.set(q + dq, r + dr, obj)
 
     def print(self):
-        pass
+        for q, col in enumerate(self._grid):
+            for r, row in enumerate(col):
+                if q >= self.lowest_q and r >= self.lowest_r and q <= self.highest_q and r <= self.highest_r:
+                    print(q + self.min_q, r + self.min_r, row)
+
 
 
 class Board(object):
     def __init__(self, starting_tile):
-        self.grid = HexGrid(-16, -16, 16, 16)
+        self.grid = HexGrid(-8, -8, 8, 8)
         self.grid.set(0, 0, starting_tile)
 
     def get_neighbor(self, tile, direction):
         return self.grid.get_neighbor(tile.q, tile.r,  direction - tile.orientation)
 
     def set_neighbor(self, tile, direction, new_tile):
-        return self.grid.set_neighbor(tile.q, tile.r,  direction - tile.orientation, new_tile)
+        direction = (direction - tile.orientation) % 6
+        if direction == 0:
+            new_tile.orientation = 3
+        elif direction == 1:
+            new_tile.orientation = 2
+        elif direction == 2:
+            new_tile.orientation = 1
+        elif direction == 3:
+            new_tile.orientation = 0
+        elif direction == 4:
+            new_tile.orientation = 5
+        elif direction == 5:
+            new_tile.orientation = 4
+        else:
+            print('BAD DIRECTIONSSSSS')
+        return self.grid.set_neighbor(tile.q, tile.r, direction, new_tile)
 
     def print(self):
         self.grid.print()

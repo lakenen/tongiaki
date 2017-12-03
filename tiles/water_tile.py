@@ -7,7 +7,7 @@ class Current(object):
         self.strength = strength
 
     def __str__(self):
-        return '{start} -> {end} ({strength})'.format(
+        return '{start} <-> {end} ({strength})'.format(
             start=self.path[0],
             end=self.path[1],
             strength=self.strength)
@@ -45,4 +45,7 @@ class WaterTile(Tile):
         assert len(sides) == Tile.NUM_SIDES
 
     def __str__(self):
-        return '(water)\n' + '\n'.join(map(str, self.currents))
+        return 'Water ({q},{r}/{o}):\n'.format(
+            q=self.q,
+            r=self.r,
+            o=self.orientation) + '\n'.join(map(str, self.currents))

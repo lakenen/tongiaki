@@ -98,6 +98,7 @@ class RandomPlayer(Player):
         """
         Randomly place boats on the given island tile.
         """
+        #TODO fix beach rules
         random.shuffle(boats)
         for boat in boats:
             open_beaches = island_tile.open_beaches
