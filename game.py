@@ -56,7 +56,8 @@ class Game(object):
                 next_tile = self.board.get_neighbor(current_tile, direction)
                 if next_tile:
                     # determine starting direction (side)
-                    direction = direction - next_tile.orientation
+                    direction = self.board.get_starting_direction(current_tile, next_tile)
+                    print('MIGRATING TO EXISTING TILE AT SIDE:', direction)
                 else:
                     next_tile = self.get_tile()
 

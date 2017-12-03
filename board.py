@@ -100,5 +100,10 @@ class Board(object):
             print('BAD DIRECTIONSSSSS')
         return self.grid.set_neighbor(tile.q, tile.r, direction, new_tile)
 
+    def get_starting_direction(self, from_tile, to_tile):
+        for i in range(6):
+            if self.get_neighbor(to_tile, i) == from_tile:
+                return i
+
     def print(self):
         self.grid.print()
