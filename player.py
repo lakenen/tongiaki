@@ -49,10 +49,22 @@ class Player(object):
         num_boats = island_tile.count_player_boats(self)
         assert num_boats > 0
         num_boats = min(num_boats, len(island_tile.beaches), len(self.available_boats))
+
         boats = []
-        for i in range(num_boats):
-            boats.append(self.get_boat())
+        if num_boats == 0:
+            # all boats are on the board, so we can choose one
+            # from some island and use it for expansion
+            boats.append(self.choose_boat_to_remove())
+        else:
+            for i in range(num_boats):
+                boats.append(self.get_boat())
+
         self.place_boats(island_tile, boats)
+
+    def choose_boat_to_remove(self):
+        """
+        """
+        raise NotImplemented()
 
     def place_initial_boat(self, starting_tile):
         """
@@ -110,3 +122,10 @@ class RandomPlayer(Player):
         if len(beaches):
             return random.choice(list(beaches))
         return None
+
+    def choose_boat_to_remove(self):
+        """
+        Choose a random boat to remove in the event that all boats are on the board.
+        """
+        assert len(self.placed_boats) > 0
+        return random.choice(list(self.placed_boats))
