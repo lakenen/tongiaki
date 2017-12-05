@@ -66,8 +66,11 @@ class HexGrid(object):
         dq, dr = HexGrid.get_neighbor_offset(direction)
         return self.set(q + dq, r + dr, obj)
 
+    def get_all_tiles(self):
+        return list(filter(bool,[a for b in self._grid for a in b]))
+
     def print(self):
-        num_tiles_to_print = len(list(filter(bool,[a for b in self._grid for a in b])))
+        num_tiles_to_print = len(self.get_all_tiles())
         tiles_found = 0
         alternate = 0
         lines = []
@@ -132,7 +135,7 @@ class HexGrid(object):
                             if i == 0:
                                 output += '  _____  '
                             elif i == 1:
-                                output += ' /  ' + str(tile.orientation) + '  \\ '
+                                output += ' /  ' + (str(tile.direction) if not tile.direction is None else ' ') + '  \\ '
                             elif i == 2:
                                 output += '/' + '{:^7}'.format(tile.name[0:7]) + '\\'
                             elif i == 3:
@@ -169,12 +172,27 @@ class Board(object):
             new_tile.orientation = 5
         elif direction == 5:
             new_tile.orientation = 4
-        return self.grid.set_neighbor(tile.q, tile.r, direction, new_tile)
+        new_tile.direction = direction
+        self.grid.set_neighbor(tile.q, tile.r, direction, new_tile)
+        self.update_adjacent_tiles()
 
     def get_starting_direction(self, from_tile, to_tile):
         for i in range(6):
             if self.get_neighbor(to_tile, i) == from_tile:
                 return i
 
+    def update_adjacent_tiles(self):
+        tiles = self.grid.get_all_tiles()
+        for tile in tiles:
+            for i in range(6):
+                neighbor = self.get_neighbor(tile, i)
+                tile.adjacent_tiles[i] = neighbor
+
     def print(self):
         self.grid.print()
+
+    def serialize(self):
+        tiles = self.grid.get_all_tiles()
+        result = []
+        for tile in tiles:
+            print(tile.serialize())

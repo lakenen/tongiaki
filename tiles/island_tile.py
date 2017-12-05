@@ -6,7 +6,7 @@ class Beach(object):
         self.tile = tile
         self.num_moorings = num_moorings
         self.boats = set()
-        self.docks = set(args)
+        self.docks = set(args) # called 'footbriges' in the official rules
 
     def __str__(self):
         result = '|'
@@ -49,6 +49,13 @@ class Beach(object):
         self.boats = set()
         return list(boats)
 
+    def serialize(self):
+        moorings = [boat.player.name for boat in self.boats] + [None] * (self.num_moorings - len(self.boats))
+        return {
+            'moorings': moorings,
+            'footbridges': list(self.docks)
+        }
+
 
 class IslandTile(Tile):
     def __init__(self, name, value, beaches):
@@ -86,3 +93,8 @@ class IslandTile(Tile):
     def open_beaches(self):
         return list(filter(lambda beach: beach.num_open_moorings > 0, self.beaches))
 
+    def serialize(self):
+        result = super().serialize()
+        result['value'] = self.value
+        result['beaches'] = list(map(lambda beach: beach.serialize(), self.beaches))
+        return result

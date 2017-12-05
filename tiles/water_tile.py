@@ -12,12 +12,18 @@ class Current(object):
             end=self.path[1],
             strength=self.strength)
 
+    def serialize(self):
+        return {
+            'path': self.path,
+            'strength': self.strength,
+        }
+
 
 class WaterTile(Tile):
     def __init__(self, name, currents):
         super().__init__()
 
-        self.name = 'water' + name
+        self.name = 'Water' + name
         self.currents = list(map(lambda args: Current(self, *args), currents))
         self._validate_current_paths()
 
@@ -49,3 +55,8 @@ class WaterTile(Tile):
             q=self.q,
             r=self.r,
             o=self.orientation) + '\n'.join(map(str, self.currents))
+
+    def serialize(self):
+        result = super().serialize()
+        result['currents'] = list(map(lambda current: current.serialize(), self.currents))
+        return result

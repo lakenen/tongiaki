@@ -124,3 +124,4 @@ class Game(object):
             print('Interrupted')
 
         self.board.print()
+        self.board.serialize()
