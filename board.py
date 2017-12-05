@@ -72,8 +72,8 @@ class HexGrid(object):
         alternate = 0
         lines = []
 
-        print('low', self.lowest_q + self.min_q, self.lowest_r + self.min_r)
-        print('high', self.highest_q + self.min_q, self.highest_r + self.min_r)
+        # print('low', self.lowest_q + self.min_q, self.lowest_r + self.min_r)
+        # print('high', self.highest_q + self.min_q, self.highest_r + self.min_r)
         num_cols = self.highest_r - self.lowest_r
         num_rows = self.highest_q - self.lowest_q
         initial_r = self.lowest_r
@@ -90,24 +90,22 @@ class HexGrid(object):
             r -= 1
         min_r = r
 
-        print('box',
-            (self.lowest_q+ self.min_q, self.lowest_r+ self.min_r),
-            (self.highest_q+ self.min_q, min_r+ self.min_r),
-            (self.lowest_q+ self.min_q, max_r+ self.min_r),
-            (self.highest_q+ self.min_q, self.highest_r+ self.min_r))
+        # print('box',
+        #     (self.lowest_q+ self.min_q, self.lowest_r+ self.min_r),
+        #     (self.highest_q+ self.min_q, min_r+ self.min_r),
+        #     (self.lowest_q+ self.min_q, max_r+ self.min_r),
+        #     (self.highest_q+ self.min_q, self.highest_r+ self.min_r))
 
         starting_r = self.lowest_r
         ending_r = min_r
         while tiles_found < num_tiles_to_print:
             q = self.lowest_q - (alternate % 2)
             r = starting_r
-            print('line', (q + self.min_q, r + self.min_r), ' to ', (self.highest_q+ self.min_q, ending_r + self.min_r))
-            print('starting line', q + self.min_q, r + self.min_r)
             line = []
             while r >= ending_r:
                 tile = self._grid[q][r]
                 line.append(tile)
-                print(q + self.min_q, r + self.min_r)
+                # print(q + self.min_q, r + self.min_r)
                 if tile:
                     tiles_found +=1
                 q += 2
@@ -125,33 +123,33 @@ class HexGrid(object):
         output = ''
         # lines = list(filter(lambda line: len(list(filter(bool,line))) > 0,lines))
         for row, line in enumerate(lines):
-            for i in range(5):
-                if (alternate % 2) == 0:
-                    output += '         '
-                for col, tile in enumerate(line):
-                    if tile:
-                        if i == 0:
-                            output += str(tile.orientation)
-                            output += ' _____  '
-                        elif i == 1:
-                            output += ' /     \\ '
-                        elif i == 2:
-                            output += '/' + '{:^7}'.format(tile.name[0:7]) + '\\'
-                        elif i == 3:
-                            output += '\\' + '{:^7}'.format(str(tile.q)+','+str(tile.r)) + '/'
-                        elif i == 4:
-                            output += ' \_____/ '
-                        output += ' ' * 9
-                    else:
-                        output += ' ' * 18
-                output += '\n'
+            if len(list(filter(bool,line))) > 0:
+                for i in range(5):
+                    if (alternate % 2) == 0:
+                        output += '         '
+                    for col, tile in enumerate(line):
+                        if tile:
+                            if i == 0:
+                                output += '  _____  '
+                            elif i == 1:
+                                output += ' /  ' + str(tile.orientation) + '  \\ '
+                            elif i == 2:
+                                output += '/' + '{:^7}'.format(tile.name[0:7]) + '\\'
+                            elif i == 3:
+                                output += '\\' + '{:^7}'.format(str(tile.q)+','+str(tile.r)) + '/'
+                            elif i == 4:
+                                output += ' \_____/ '
+                            output += ' ' * 9
+                        else:
+                            output += ' ' * 18
+                    output += '\n'
             alternate += 1
         print(output)
 
 
 class Board(object):
     def __init__(self, starting_tile):
-        self.grid = HexGrid(-8, -8, 8, 8)
+        self.grid = HexGrid(-16, -16, 16, 16)
         self.grid.set(0, 0, starting_tile)
 
     def get_neighbor(self, tile, direction):

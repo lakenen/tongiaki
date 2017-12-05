@@ -54,14 +54,14 @@ class Game(object):
             # until current migration is complete...
             while True:
                 next_tile = self.board.get_neighbor(current_tile, direction)
+                # existing tile
                 if next_tile:
-                    # determine starting direction (side)
+                    # determine starting side of the existing tile
                     direction = self.board.get_starting_direction(current_tile, next_tile)
-                    print('MIGRATING TO EXISTING TILE AT SIDE:', direction)
                 else:
                     next_tile = self.get_tile()
 
-                    print('!!! placing tile', direction)
+                    print('placing tile')
                     self.board.set_neighbor(current_tile, direction, next_tile)
 
                     # starting direction (side) is always 0 for new tiles
@@ -71,6 +71,7 @@ class Game(object):
 
                 if current_tile.is_water:
                     # try to pass the water tile
+                    print('still sailing...')
                     print(current_tile)
                     if not self.is_over and current_tile.can_pass(current_boats, direction):
                         old_direction = direction
@@ -89,7 +90,7 @@ class Game(object):
                 elif current_tile.is_island:
                     # landfall! place boats and stop picking tiles.
                     player.place_boats(current_tile, current_boats)
-                    print('!!! landfall')
+                    print('made landfall')
                     print(current_tile)
                     if self.is_over:
                         raise GameOver()
