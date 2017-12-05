@@ -5,25 +5,25 @@ from player import RandomPlayer
 
 def generate_water_tiles():
     return [
-        WaterTile([(0, 1, 0), (2, 3, 2), (4, 5, 0)]),
-        WaterTile([(0, 1, 2), (2, 3, 0), (4, 5, 2)]),
-        WaterTile([(0, 1, 3), (2, 3, 2), (4, 5, 4)]),
-        WaterTile([(0, 1, 3), (2, 3, 0), (4, 5, 2)]),
+        WaterTile('01', [(0, 1, 0), (2, 3, 2), (4, 5, 0)]),
+        WaterTile('02', [(0, 1, 2), (2, 3, 0), (4, 5, 2)]),
+        WaterTile('03', [(0, 1, 3), (2, 3, 2), (4, 5, 4)]),
+        WaterTile('04', [(0, 1, 3), (2, 3, 0), (4, 5, 2)]),
 
-        WaterTile([(0, 3, 4), (1, 5, 3), (2, 4, 0)]),
-        WaterTile([(0, 3, 3), (1, 5, 3), (2, 4, 3)]),
-        WaterTile([(0, 3, 4), (1, 5, 4), (2, 4, 4)]),
-        WaterTile([(0, 3, 3), (1, 5, 2), (2, 4, 0)]),
+        WaterTile('05', [(0, 3, 4), (1, 5, 3), (2, 4, 0)]),
+        WaterTile('06', [(0, 3, 3), (1, 5, 3), (2, 4, 3)]),
+        WaterTile('07', [(0, 3, 4), (1, 5, 4), (2, 4, 4)]),
+        WaterTile('08', [(0, 3, 3), (1, 5, 2), (2, 4, 0)]),
 
-        WaterTile([(0, 4, 0), (1, 3, 4), (2, 5, 2)]),
-        WaterTile([(0, 4, 2), (1, 3, 3), (2, 5, 4)]),
-        WaterTile([(0, 4, 4), (1, 3, 4), (2, 5, 3)]),
-        WaterTile([(0, 4, 3), (1, 3, 3), (2, 5, 4)]),
+        WaterTile('09', [(0, 4, 0), (1, 3, 4), (2, 5, 2)]),
+        WaterTile('10', [(0, 4, 2), (1, 3, 3), (2, 5, 4)]),
+        WaterTile('11', [(0, 4, 4), (1, 3, 4), (2, 5, 3)]),
+        WaterTile('12', [(0, 4, 3), (1, 3, 3), (2, 5, 4)]),
 
-        WaterTile([(0, 5, 0), (1, 2, 0), (3, 4, 0)]),
-        WaterTile([(0, 5, 2), (1, 2, 2), (3, 4, 2)]),
-        WaterTile([(0, 5, 0), (1, 2, 4), (3, 4, 2)]),
-        WaterTile([(0, 5, 0), (1, 2, 3), (3, 4, 4)]),
+        WaterTile('13', [(0, 5, 0), (1, 2, 0), (3, 4, 0)]),
+        WaterTile('14', [(0, 5, 2), (1, 2, 2), (3, 4, 2)]),
+        WaterTile('15', [(0, 5, 0), (1, 2, 4), (3, 4, 2)]),
+        WaterTile('16', [(0, 5, 0), (1, 2, 3), (3, 4, 4)]),
     ]
 
 def generate_island_tiles():
@@ -53,8 +53,6 @@ def generate_starting_tile():
 
 def generate_tile_stack():
     return generate_water_tiles() + generate_island_tiles()
-
-# print(generate_starting_tile())
 
 game = Game(generate_starting_tile(), generate_tile_stack())
 game.play([

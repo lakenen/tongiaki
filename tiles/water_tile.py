@@ -14,10 +14,10 @@ class Current(object):
 
 
 class WaterTile(Tile):
-    def __init__(self, currents):
+    def __init__(self, name, currents):
         super().__init__()
 
-        self.name = '(water)'
+        self.name = 'water' + name
         self.currents = list(map(lambda args: Current(self, *args), currents))
         self._validate_current_paths()
 

@@ -1,4 +1,4 @@
-from random import shuffle
+import random
 from board import Board
 
 
@@ -9,7 +9,7 @@ class GameOver(Exception):
 class Game(object):
     def __init__(self, starting_tile, tile_stack, num_initial_boats=2):
 
-        shuffle(tile_stack)
+        random.shuffle(tile_stack)
         self.tile_stack = tile_stack
         # for tile in self.tile_stack:
         #     print(tile, '\n')
@@ -119,5 +119,7 @@ class Game(object):
             print('game over!')
             for player in self.players:
                 print(player)
+        except KeyboardInterrupt:
+            print('Interrupted')
 
         self.board.print()

@@ -67,11 +67,86 @@ class HexGrid(object):
         return self.set(q + dq, r + dr, obj)
 
     def print(self):
-        for q, col in enumerate(self._grid):
-            for r, row in enumerate(col):
-                if q >= self.lowest_q and r >= self.lowest_r and q <= self.highest_q and r <= self.highest_r:
-                    print(q + self.min_q, r + self.min_r, row)
+        num_tiles_to_print = len(list(filter(bool,[a for b in self._grid for a in b])))
+        tiles_found = 0
+        alternate = 0
+        lines = []
 
+        print('low', self.lowest_q + self.min_q, self.lowest_r + self.min_r)
+        print('high', self.highest_q + self.min_q, self.highest_r + self.min_r)
+        num_cols = self.highest_r - self.lowest_r
+        num_rows = self.highest_q - self.lowest_q
+        initial_r = self.lowest_r
+        q = self.highest_q
+        r = self.highest_r
+        while q > self.lowest_q:
+            q -= 2
+            r += 1
+        max_r = r + 1
+        q = self.lowest_q
+        r = self.lowest_r
+        while q < self.highest_q:
+            q += 2
+            r -= 1
+        min_r = r
+
+        print('box',
+            (self.lowest_q+ self.min_q, self.lowest_r+ self.min_r),
+            (self.highest_q+ self.min_q, min_r+ self.min_r),
+            (self.lowest_q+ self.min_q, max_r+ self.min_r),
+            (self.highest_q+ self.min_q, self.highest_r+ self.min_r))
+
+        starting_r = self.lowest_r
+        ending_r = min_r
+        while tiles_found < num_tiles_to_print:
+            q = self.lowest_q - (alternate % 2)
+            r = starting_r
+            print('line', (q + self.min_q, r + self.min_r), ' to ', (self.highest_q+ self.min_q, ending_r + self.min_r))
+            print('starting line', q + self.min_q, r + self.min_r)
+            line = []
+            while r >= ending_r:
+                tile = self._grid[q][r]
+                line.append(tile)
+                print(q + self.min_q, r + self.min_r)
+                if tile:
+                    tiles_found +=1
+                q += 2
+                r -= 1
+            lines.append(line)
+            if starting_r > max_r:
+                print('!!! ------- error ------- !!!')
+                break
+            alternate = (alternate + 1)
+            starting_r += alternate % 2
+            ending_r += alternate % 2
+
+        # print(lines)
+        alternate = 0
+        output = ''
+        # lines = list(filter(lambda line: len(list(filter(bool,line))) > 0,lines))
+        for row, line in enumerate(lines):
+            for i in range(5):
+                if (alternate % 2) == 0:
+                    output += '         '
+                for col, tile in enumerate(line):
+                    if tile:
+                        if i == 0:
+                            output += str(tile.orientation)
+                            output += ' _____  '
+                        elif i == 1:
+                            output += ' /     \\ '
+                        elif i == 2:
+                            output += '/' + '{:^7}'.format(tile.name[0:7]) + '\\'
+                        elif i == 3:
+                            output += '\\' + '{:^7}'.format(str(tile.q)+','+str(tile.r)) + '/'
+                        elif i == 4:
+                            output += ' \_____/ '
+                        output += ' ' * 9
+                    else:
+                        output += ' ' * 18
+                output += '\n'
+            alternate += 1
+        print(output)
 
 
 class Board(object):
@@ -96,8 +171,6 @@ class Board(object):
             new_tile.orientation = 5
         elif direction == 5:
             new_tile.orientation = 4
-        else:
-            print('BAD DIRECTIONSSSSS')
         return self.grid.set_neighbor(tile.q, tile.r, direction, new_tile)
 
     def get_starting_direction(self, from_tile, to_tile):
