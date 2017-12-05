@@ -1,5 +1,4 @@
 
-
 class HexGrid(object):
     @classmethod
     def get_neighbor_offset(cls, direction):
@@ -193,6 +192,4 @@ class Board(object):
 
     def serialize(self):
         tiles = self.grid.get_all_tiles()
-        result = []
-        for tile in tiles:
-            print(tile.serialize())
+        return [tile.serialize() for tile in tiles]

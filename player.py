@@ -77,6 +77,12 @@ class Player(object):
              + ' (' + str(len(self.available_boats)) + ' boats)' \
              + ' (score: ' + str(self.current_score) + ')'
 
+    def serialize(self):
+        return {
+            'name': self.name,
+            'available_boats': len(self.available_boats),
+        }
+
 class RandomPlayer(Player):
     def place_initial_boat(self, starting_tile):
         """

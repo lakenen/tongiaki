@@ -1,3 +1,4 @@
+import json
 import random
 from board import Board
 
@@ -124,4 +125,11 @@ class Game(object):
             print('Interrupted')
 
         self.board.print()
-        self.board.serialize()
+        print(self.serialize())
+
+    def serialize(self):
+        result = {
+            'tiles': self.board.serialize(),
+            'players': [player.serialize() for player in self.players],
+        }
+        return json.dumps(result)
