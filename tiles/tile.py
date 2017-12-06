@@ -27,6 +27,7 @@ class Tile(object):
             'q': self.q,
             'r': self.r,
             'name': self.name,
+            'orientation': self.orientation,
             'direction': self.direction,
             'adjacent_tiles': [tile.name if tile else None for tile in self.adjacent_tiles]
         }
