@@ -15,6 +15,11 @@ function midpoint(p1, p2) {
 }
 
 function drawHex(tile, x, y, size) {
+    if (tile.currents) {
+        ctx.fillStyle = '#8af'
+    } else {
+        ctx.fillStyle = '#fd2'
+    }
     ctx.beginPath()
     ctx.moveTo.apply(ctx, hexPoint(0, x, y, size))
     b = []
@@ -37,6 +42,7 @@ function drawHex(tile, x, y, size) {
         b.push([pt, [cx2, cy2]])
     }
     ctx.stroke()
+    ctx.fill()
     // return
     if (tile.currents) {
         tile.currents.forEach(function (current) {
@@ -83,12 +89,60 @@ function drawHex(tile, x, y, size) {
     // })
 }
 
-function drawBoard(tiles) {
-    var centerX = c.width / 2,
-        centerY = c.height / 2
-    tiles.forEach(function (tile) {
-        var x = HEX_SIZE * tile.q * 1.5
-        var y = HEX_SIZE * Math.sqrt(3) * (tile.r + tile.q / 2)
-        drawHex(tile, centerX + x, centerY + y, HEX_SIZE)
-    })
+function drawBoard(currentX, currentY) {
+    if (window.game) {
+        game.tiles.forEach(function (tile) {
+            var x = HEX_SIZE * tile.q * 1.5
+            var y = HEX_SIZE * Math.sqrt(3) * (tile.r + tile.q / 2)
+            drawHex(tile, currentX + x, currentY + y, HEX_SIZE)
+        })
+    }
 }
+
+
+var centerX, centerY, fid,
+    offX = 0, offY = 0,
+    downX, downY
+
+function resize() {
+    c.width = window.innerWidth
+    c.height = window.innerHeight
+    centerX = c.width / 2
+    centerY = c.height / 2
+    redraw()
+}
+function redraw() {
+    cancelAnimationFrame(fid)
+    fid = requestAnimationFrame(function() {
+        c.width = c.width
+        drawBoard(centerX + offX, centerY + offY)
+    });
+}
+
+function move(ev) {
+    offX = ev.x - downX
+    offY = ev.y - downY
+    redraw()
+}
+
+resize()
+redraw()
+window.addEventListener('resize', resize)
+window.addEventListener('mousedown', function (ev) {
+    downX = ev.x - offX
+    downY = ev.y - offY
+    move(ev)
+    window.addEventListener('mousemove', move)
+})
+
+window.addEventListener('mouseup', function () {
+    window.removeEventListener('mousemove', move)
+})
+window.addEventListener('dblclick', function (ev) {
+    if (ev.shiftKey) {
+        HEX_SIZE /= 1.5
+    } else {
+        HEX_SIZE *= 1.5
+    }
+    redraw()
+})
